@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 
 class SendMessageWidget extends StatefulWidget {
   final void Function()? sendOnPressed;
-  final void Function()? micOnPressed;
+
   final TextEditingController messageController;
   const SendMessageWidget({
     super.key,
     this.sendOnPressed,
     required this.messageController,
-    this.micOnPressed,
   });
 
   @override
@@ -19,10 +18,6 @@ class SendMessageWidget extends StatefulWidget {
 class _SendMessageWidgetState extends State<SendMessageWidget> {
   void sendOnPressed() {
     widget.sendOnPressed?.call();
-  }
-
-  void micOnPressed() {
-    widget.micOnPressed?.call();
   }
 
   @override

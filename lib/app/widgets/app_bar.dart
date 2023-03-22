@@ -2,10 +2,11 @@ import 'package:chat_gpt/app/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CHATAppBar extends AppBar {
-  final VoidCallback onPressed;
+  final VoidCallback onPressedDelete;
+
   CHATAppBar({
     super.key,
-    required this.onPressed,
+    required this.onPressedDelete,
   }) : super(
           elevation: 10,
           backgroundColor: AppTheme.primaryColor,
@@ -13,7 +14,7 @@ class CHATAppBar extends AppBar {
           centerTitle: true,
           actions: [
             IconButton(
-              onPressed: onPressed,
+              onPressed: onPressedDelete,
               icon: const Icon(Icons.delete_outline),
             ),
           ],

@@ -15,11 +15,19 @@ class ChatGptPage extends StatefulWidget {
 class _ChatGptPageState extends State<ChatGptPage> {
   final ChatGptController controller = ChatGptController();
   final TextEditingController messageController = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+    controller.stop();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CHATAppBar(onPressed: () => controller.clear()),
+        appBar: CHATAppBar(
+          onPressedDelete: () => controller.clear(),
+        ),
         backgroundColor: AppTheme.primaryLightColor,
         body: AnimatedBuilder(
           animation: controller,
@@ -39,7 +47,6 @@ class _ChatGptPageState extends State<ChatGptPage> {
                       messageController.clear();
                     }
                   },
-                  micOnPressed: () {},
                 ),
               ],
             ),
