@@ -10,14 +10,31 @@ class ChatGptController with ChangeNotifier {
   final List<Map<String, dynamic>> messages = [];
   final ChatGptRepository _chatGptRepository = ChatgptRepositoryImp(DioServiceImp());
   FlutterTts flutterTts = FlutterTts();
+  bool get flagMostraControlesTextToSpeech => message.isNotEmpty;
+  String message = '';
+
+  final snackBar = SnackBar(
+    content: Row(
+      children: [
+        IconButton(onPressed: () {}, icon: const Icon(Icons.stop)),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.pause)),
+        IconButton(onPressed: () {}, icon: const Icon(Icons.play_arrow)),
+      ],
+    ),
+    duration: const Duration(seconds: 5),
+  );
 
   addMessages(String message) async {
     messages.add({'data': DateTime.now(), 'message': message, 'me': true});
     notifyListeners();
+    await speak(message);
     final response = await _chatGptRepository.promptMessage(message);
     messages.add({'data': DateTime.now(), 'message': response, 'me': false});
     scrollToBottom();
     notifyListeners();
+    Future.delayed(const Duration(seconds: 1), () {
+      speak(response);
+    });
   }
 
   void scrollToBottom() {
@@ -30,19 +47,39 @@ class ChatGptController with ChangeNotifier {
     messages.clear();
   }
 
-  String speak(String message) {
+  String toWrite(String message) {
+    messageController.text = message;
+    return message;
+  }
+
+  Future<bool> speak(String value) async {
     flutterTts.setLanguage("pt-BR");
     flutterTts.setVoice({"name": "Karen", "locale": "pt-BR"});
     flutterTts.setPitch(1);
+    await flutterTts.awaitSpeakCompletion(true);
+    message = value;
+    notifyListeners();
     if (message.isNotEmpty) {
-      flutterTts.speak(message);
+      await flutterTts.speak(message).then((value) {
+        if (value == 1) stop();
+      });
     }
-
-    return message;
+    return true;
   }
 
   void stop() async {
     await flutterTts.stop();
+    message = '';
+    notifyListeners();
+  }
+
+  void pause() {
+    flutterTts.pause();
+    notifyListeners();
+  }
+
+  void play() {
+    flutterTts.speak(message).then((value) => stop());
   }
 
   @override
@@ -50,9 +87,5 @@ class ChatGptController with ChangeNotifier {
     messageController.dispose();
     scrollController.dispose();
     super.dispose();
-  }
-
-  void pause() {
-    flutterTts.pause();
   }
 }

@@ -1,8 +1,13 @@
 import 'package:chat_gpt/app/pages/chat_gpt_page.dart';
+import 'package:chat_gpt/app/providies/providies.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const ChatGPT());
+  runApp(MultiProvider(
+    providers: AppProviders.providers,
+    child: const ChatGPT(),
+  ));
 }
 
 class ChatGPT extends StatelessWidget {

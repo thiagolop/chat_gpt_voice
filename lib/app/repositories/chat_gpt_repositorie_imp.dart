@@ -21,7 +21,7 @@ class ChatgptRepositoryImp implements ChatGptRepository {
             "frequency_penalty": 0.0,
             "presence_penalty": 0.0,
           },
-          options: Options(headers: {'Authorization': 'Bearer ${ApiKey.getopenAIAPIKEY}'}));
+          options: Options(headers: {'Authorization': 'Bearer ${ApiKey.getopenAIAPIKEYPart1}${ApiKey.getopenAIAPIKEYPart2}'}));
       return response.data['choices'][0]['text'];
     } catch (e, s) {
       return 'Erro ao enviar mensagem,Erro: $e StackTrace: $s';

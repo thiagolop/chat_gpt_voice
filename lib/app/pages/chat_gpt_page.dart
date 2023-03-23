@@ -4,6 +4,7 @@ import 'package:chat_gpt/app/widgets/app_bar.dart';
 import 'package:chat_gpt/app/widgets/chat_widget.dart';
 import 'package:chat_gpt/app/widgets/send_message_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatGptPage extends StatefulWidget {
   const ChatGptPage({Key? key}) : super(key: key);
@@ -13,44 +14,43 @@ class ChatGptPage extends StatefulWidget {
 }
 
 class _ChatGptPageState extends State<ChatGptPage> {
-  final ChatGptController controller = ChatGptController();
   final TextEditingController messageController = TextEditingController();
-  @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
-    controller.stop();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: CHATAppBar(
-          onPressedDelete: () => controller.clear(),
-        ),
-        backgroundColor: AppTheme.primaryLightColor,
-        body: AnimatedBuilder(
-          animation: controller,
-          builder: (_, child) => SizedBox.expand(
-            child: Column(
-              children: [
-                ChatWidget(
-                  controller: controller,
+    return Consumer<ChatGptController>(
+      builder: (context, value, child) {
+        return Scaffold(
+            appBar: CHATAppBar(onPressedDelete: () => value.clear()),
+            backgroundColor: AppTheme.primaryLightColor,
+            body: AnimatedBuilder(
+              animation: value,
+              builder: (_, child) => SizedBox.expand(
+                child: Column(
+                  children: [
+                    ChatWidget(
+                      controller: value,
+                    ),
+                    SendMessageWidget(
+                      onPressedPause: value.pause,
+                      onPressedPlay: value.play,
+                      onPressedStop: value.stop,
+                      flagMostraControlesTextToSpeech: value.flagMostraControlesTextToSpeech,
+                      messageController: messageController,
+                      sendOnPressed: () {
+                        if (messageController.text.isEmpty) {
+                          return;
+                        } else {
+                          value.addMessages(messageController.text);
+                          messageController.clear();
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                SendMessageWidget(
-                  messageController: messageController,
-                  sendOnPressed: () {
-                    if (messageController.text.isEmpty) {
-                      return;
-                    } else {
-                      controller.addMessages(messageController.text);
-                      messageController.clear();
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ));
+              ),
+            ));
+      },
+    );
   }
 }
