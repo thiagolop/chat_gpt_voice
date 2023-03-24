@@ -21,7 +21,9 @@ class _ChatGptPageState extends State<ChatGptPage> {
     return Consumer<ChatGptController>(
       builder: (context, value, child) {
         return Scaffold(
-            appBar: CHATAppBar(onPressedDelete: () => value.clear()),
+            appBar: CHATAppBar(
+              onPressedDelete: value.clear,
+            ),
             backgroundColor: AppTheme.primaryLightColor,
             body: AnimatedBuilder(
               animation: value,

@@ -16,7 +16,7 @@ class ChatGptController with ChangeNotifier {
   addMessages(String message) async {
     messages.add({'data': DateTime.now(), 'message': message, 'me': true});
     notifyListeners();
-    await speak(message);
+    toWrite(message);
     final response = await _chatGptRepository.promptMessage(message);
     messages.add({'data': DateTime.now(), 'message': response, 'me': false});
     scrollToBottom();
@@ -34,6 +34,8 @@ class ChatGptController with ChangeNotifier {
 
   void clear() {
     messages.clear();
+    stop();
+    notifyListeners();
   }
 
   String toWrite(String message) {
