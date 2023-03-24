@@ -19,6 +19,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         controller: widget.controller.scrollController,
         itemCount: widget.controller.messages.length,
         itemBuilder: (_, index) {

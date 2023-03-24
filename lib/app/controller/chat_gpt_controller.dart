@@ -13,17 +13,6 @@ class ChatGptController with ChangeNotifier {
   bool get flagMostraControlesTextToSpeech => message.isNotEmpty;
   String message = '';
 
-  final snackBar = SnackBar(
-    content: Row(
-      children: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.stop)),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.pause)),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.play_arrow)),
-      ],
-    ),
-    duration: const Duration(seconds: 5),
-  );
-
   addMessages(String message) async {
     messages.add({'data': DateTime.now(), 'message': message, 'me': true});
     notifyListeners();
@@ -80,12 +69,5 @@ class ChatGptController with ChangeNotifier {
 
   void play() {
     flutterTts.speak(message).then((value) => stop());
-  }
-
-  @override
-  void dispose() {
-    messageController.dispose();
-    scrollController.dispose();
-    super.dispose();
   }
 }
